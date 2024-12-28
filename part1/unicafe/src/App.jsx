@@ -1,211 +1,91 @@
 import { useState } from 'react'
 
-const Header = (props) => {
+
+const Button = ({text,onClick}) => {
+   return (
+    <>
+      <button onClick={onClick}>{text}</button>
+    </>
+   )
+
+}
+
+
+const StatisticLine = ({text,value}) =>{
   return (
     <>
-      <h1>{props.course}</h1>
+      <tr>
+        <td>{text}</td>
+        <td>{value}</td>
+      </tr>
     </>
   )
-}
+} 
 
 
-const Part = (props) =>{
-  return (
-    <p>{props.part} {props.exercises}</p>
-  )
-}
+const Statistics = ({good, neutral, bad}) =>{
 
+  const all = bad + neutral + good
+  const average = (good - bad)/all 
+  const positive = (good/all  * 100) + "%"
 
-const Content = (props) => {
-  return (
-    <>
-      <Part part={props.parts[0].name} exercises={props.parts[0].exercises}/>
-      <Part part={props.parts[1].name} exercises={props.parts[1].exercises}/>
-      <Part part={props.parts[2].name} exercises={props.parts[2].exercises}/>
-    </>
-  )
-}
+  if(all>0){
 
-const Total  = (props) =>{
-  return (
-    <>
-    <p>Number of exercises {props.parts[0].exercises  + props.parts[1].exercises + props.parts[2].exercises }</p>
-    </>
-  )
-}
+    return (
+      <div>
+        <p>statistics</p>
+        <table>
+          <tbody>
+            <StatisticLine text="good" value={good} />
+            <StatisticLine text="neutral" value={neutral} />
+            <StatisticLine text="bad" value={bad} />
+            <StatisticLine text="all" value={all} />
+            <StatisticLine text="average" value={average} />
+            <StatisticLine text="positive" value={positive} />
+          </tbody>
+        </table>
+        
+      </div>
+    )
 
-
-const Hello = ({ name, age }) => {
-
-  const bornYear = () => new Date().getFullYear() - age
-
-  return (
-    <div>
-      <p>Hello {name}, you are {age} years old</p>
-      <p>So you were probably born in {bornYear()}</p>
-    </div>
-  )
-}
-
-// const App = () => {
-
-
-//   const course = {
-//     name: 'Half Stack application development',
-//     parts: [
-//       {
-//         name: 'Fundamentals of React',
-//         exercises: 10
-//       },
-//       {
-//         name: 'Using props to pass data',
-//         exercises: 7
-//       },
-//       {
-//         name: 'State of a component',
-//         exercises: 14
-//       }
-//     ]
-//   }
-
-//   const parts = course.parts
-
+  }else{
+    return(
+      <div>
+        <p>statistics</p>
+        <p>No feedback given</p>
+      </div>
+    )
+  }
 
   
-//   const name = 'Arto Hellas'
-//   const age= 31
 
-
-//   const Boton = (props) => {
-//     const {counter} = props
-//     return (
-//       <div>{counter}</div>
-//     )
-//   }
-
-
-//   return (
-//     <div>
-//       <Header course={course.name} />
-//       <Content parts={parts} />
-//       <Total parts={parts} />
-//       <Hello  name={name} age={age} />
-
-//     </div>
-//   )
-// }
-
-
-const Display = ({ counter }) => <div>{counter}</div>
-
-
-const Button = ({onClick,text}) => {
-  return (
-    <button onClick={onClick}>
-      {text}
-    </button>
-  )
 }
 
+const App = () => {
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
 
-// const App = () => {
-//   const [counter, setCounter] = useState(0)
-
-//   console.log('rendering with counter value', counter)
-
-//   const increaseByOne = () => {
-
-//     console.log('increasing, value before', counter)
-//     setCounter(counter + 1)
-//   }
-
-//   const decreaseByOne = () => { 
-
-//     console.log('decreasing, value before', counter)
-//     setCounter(counter - 1)
-//   }
-
-//   const setToZero = () => {
-
-//     console.log('resetting to zero, value before', counter)
-//     setCounter(0)
-//   }
-
-//   return (
-//     <div>
-//       <Display counter={counter} />
-//       <Button onClick={increaseByOne} text="plus" />
-//       <Button onClick={setToZero} text="zero" />
-//       <Button onClick={decreaseByOne} text="minus" />
-//     </div>
-//   )
-// }
-
-
-// const App = () => {
-
-//   const [clicks, setClicks] = useState({
-//     left: 0,
-//     right: 0
-//   })
-
-//   const handleLeftClick = ()=>{
-//     setClicks({...clicks,left:clicks.left +1})
-//   }
-
-
-//   const handleRightClick = ()=>{
-//     setClicks({...clicks,right: clicks.right + 1})
-//   }
-
-//   return (
-//     <div>
-//       {clicks.left}
-//       <button onClick={handleLeftClick}>left</button>
-//       <button onClick={handleRightClick}>right</button>
-//       {clicks.right}
-//     </div>
-//   )
-
-// }
-
-
-const App = () =>{
-
-  const [left, setLeft] = useState(0)
-  const [right, setRight] = useState(0)
-  const [allClicks, setAll] = useState([])
-  const [total, setTotal] = useState(0)
-
-
-  const handleLeftClick = ()=>{
-    const updateLeft = left + 1
-    setLeft(updateLeft)
-    setAll(allClicks.concat("L"))
-    setTotal(right+updateLeft)
+  const handleClickGood = ()=>{
+    setGood(good + 1)
+  }
+  const handleClickNeutral = ()=>{
+    setNeutral(neutral + 1)
+  }
+  const handleClickBad = ()=>{
+    setBad(bad + 1)
   }
 
-  const handleRightClick = ()=>{
-    const updateRight = right + 1
-    setRight(updateRight)
-    setAll(allClicks.concat("R"))
-    setTotal(left+updateRight)
-  }
-
-
-  return(
+  return (
     <div>
-      {left}
-      <button onClick={handleLeftClick}>left</button>
-      <button onClick={handleRightClick}>right</button>
-      {right}
-      <p>{allClicks.join(' ')}</p>
-      <p>{total}</p>
-
+      <p>give feedback</p>
+      <Button text="good" onClick={handleClickGood}  />
+      <Button text="neutral" onClick={handleClickNeutral}  />
+      <Button text="bad"  onClick={handleClickBad} />
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
-
 }
-
 
 export default App
